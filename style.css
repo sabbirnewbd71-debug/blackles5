@@ -1,32 +1,27 @@
-body {
-  font-family: Arial;
-  background: #0f172a;
-  color: white;
-  padding: 20px;
+body { margin:0; display:flex; background:#0f1117; color:#fff; font-family:Arial }
+.sidebar { width:220px; background:#151823; padding:20px }
+.sidebar h2 { color:#4f7cff }
+.sidebar li { padding:10px; list-style:none }
+.main { padding:30px }
+.card {
+  background:#151823;
+  padding:20px;
+  margin-bottom:20px;
+  border-radius:10px;
+  width:320px;
 }
-
-h1, h2 {
-  color: #facc15;
-}
-
-.box {
-  background: #1e293b;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-}
-
-input, button {
-  padding: 8px;
-  margin-top: 5px;
-  width: 100%;
-  border-radius: 5px;
-}
-
 button {
-  cursor: pointer;
-  background-color: #fbbf24;
-  color: #0f172a;
-  border: none;
-  font-weight: bold;
+  width:100%;
+  padding:10px;
+  background:#4f7cff;
+  border:none;
+  color:white;
+}
+input {
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+  background:#0f1117;
+  color:white;
+  border:1px solid #333;
 }
