@@ -8,7 +8,6 @@
 </head>
 <body>
     <h1>Discord Admin OTP System (ES5)</h1>
-    <button id="showMenu">Show Admin Menu</button>
 
     <script>
         // ===== Firebase Config =====
@@ -30,7 +29,7 @@
         // ===== Discord Webhook URL =====
         var webhookURL = "https://discord.com/api/webhooks/1460103097195167910/5CM-bcGF2LPrJagD2J2t4vtNHHd0PznBXm3oa8Sdrskv29LY8oVqeahePYLWDWaFVupU";
 
-        // ===== Generate 6-digit OTP =====
+        // ===== Generate OTP =====
         function generateOTP() {
             return Math.floor(100000 + Math.random()*900000).toString();
         }
@@ -48,8 +47,8 @@
             xhr.send(JSON.stringify({ content: message }));
         }
 
-        // ===== Show Admin Menu =====
-        document.getElementById("showMenu").onclick = function() {
+        // ===== Send Admin Menu Automatically =====
+        function sendAdminMenu() {
             var menuMessage = "🔐 ADMIN CONTROL MENU 🔐\n\n" +
                 "1️⃣ One-Time Password Create\n" +
                 "2️⃣ User Block\n" +
@@ -59,9 +58,13 @@
                 "6️⃣ Cancel\n\n" +
                 "👉 শুধু নাম্বার পাঠাও (1-6)";
             
-            sendToDiscord(menuMessage);
-            alert("Menu sent to Discord channel!");
-        };
+            sendToDiscord(menuMessage, function(data){
+                console.log("Admin menu sent!", data);
+            });
+        }
+
+        // Auto send menu on page load
+        sendAdminMenu();
 
         // ===== Handle Admin Commands =====
         function handleCommand(command, adminId) {
@@ -69,9 +72,8 @@
 
             if(command === "1") {
                 var otp = generateOTP();
-                var expireTime = Date.now() + 2*60*1000; // 2 minutes
+                var expireTime = Date.now() + 2*60*1000; // 2 min
 
-                // Firebase write
                 database.ref('otp_tasks/' + taskId).set({
                     action: "otp_create",
                     otp: otp,
@@ -80,10 +82,8 @@
                     expire: expireTime
                 });
 
-                // Send OTP to Discord
                 sendToDiscord("🔐 OTP: **" + otp + "** (Valid 2 minutes)", function(data){
                     var messageId = data.id;
-                    // Auto delete after 2 minutes
                     setTimeout(function() {
                         var xhr = new XMLHttpRequest();
                         xhr.open("DELETE", webhookURL + "/messages/" + messageId, true);
@@ -133,8 +133,8 @@
             }
         }
 
-        // ===== Example: handle a command =====
-        // Normally this would come from Discord Webhook payload
+        // ===== Example of command usage =====
+        // Normally Discord Webhook payload triggers handleCommand
         // handleCommand("1", "admin123");
     </script>
 </body>
