@@ -2,32 +2,46 @@
 <html>
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width">
 <title>Admin Panel</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="login" class="card">
-  <h3>Admin Login</h3>
-  <input id="aid" placeholder="Admin ID">
-  <input id="otp" placeholder="OTP">
-  <button onclick="adminLogin()">Login</button>
+
+<div id="login" class="box">
+<h2>Admin One-Time Login</h2>
+<input id="aid" placeholder="Admin ID">
+<input id="otp" placeholder="One Time Key">
+<button onclick="adminLogin()">Login</button>
 </div>
 
-<div id="panel" class="card hidden">
-  <h3 id="adminName"></h3>
 
-  <h4>Create User</h4>
-  <input id="u" placeholder="Username">
-  <input id="p" placeholder="Password">
-  <input id="d" placeholder="Days">
-  <button onclick="createUser()">Create</button>
+<div id="panel" class="box hide">
+<h3 id="aname"></h3>
 
-  <h4>Reset HWID</h4>
-  <input id="ru" placeholder="Username">
-  <button onclick="resetHWID()">Reset</button>
+
+<h4>Create User</h4>
+<input id="u" placeholder="Username">
+<input id="p" placeholder="Password">
+<input id="d" placeholder="Days">
+<button onclick="createUser()">Create</button>
+
+
+<h4>Reset HWID</h4>
+<input id="ru" placeholder="Username">
+<button onclick="resetHWID()">Reset</button>
+
+
+<h4>Delete User</h4>
+<input id="du" placeholder="Username">
+<button class="danger" onclick="deleteUser()">Delete</button>
+
+
+<h4>Live Online</h4>
+<p id="online">0</p>
 </div>
+
 
 <script type="module" src="app.js"></script>
 </body>
