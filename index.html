@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Admin Panel</title>
+  <title>KeyAuth Admin</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<h1>Admin Panel</h1>
-
-<div class="box">
-  <h2>Create User</h2>
-  <input id="username" placeholder="Username">
-  <input id="password" placeholder="Password">
-  <button onclick="createUser()">Create User</button>
+<div class="sidebar">
+  <h2>KeyAuth</h2>
+  <ul>
+    <li>Dashboard</li>
+    <li>Licenses</li>
+    <li>Users</li>
+    <li>OTP</li>
+  </ul>
 </div>
 
-<div class="box">
-  <h2>Generate Admin OTP</h2>
-  <button onclick="generateOTP()">Generate OTP</button>
-  <p id="otp"></p>
-</div>
+<div class="main">
+  <h1>Admin Panel</h1>
 
-<div class="box">
-  <h2>Online Users</h2>
-  <p id="live">0</p>
-</div>
+  <div class="card">
+    <h3>Generate License</h3>
+    <input type="date" id="expire">
+    <button onclick="genKey()">Generate</button>
+    <p id="out"></p>
+  </div>
 
-<div class="box">
-  <h2>User Delete</h2>
-  <input id="delUser" placeholder="Username to delete">
-  <button onclick="deleteUser()">Delete User</button>
+  <div class="card">
+    <h3>Generate OTP</h3>
+    <button onclick="genOTP()">Generate OTP</button>
+  </div>
 </div>
 
 <script type="module" src="app.js"></script>
