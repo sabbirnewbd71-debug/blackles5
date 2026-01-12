@@ -1,47 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width">
-<title>Admin Panel</title>
-<link rel="stylesheet" href="style.css">
+  <title>Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<h1>Admin Panel</h1>
 
-<div id="login" class="box">
-<h2>Admin One-Time Login</h2>
-<input id="aid" placeholder="Admin ID">
-<input id="otp" placeholder="One Time Key">
-<button onclick="adminLogin()">Login</button>
+<div class="box">
+  <h2>Create User</h2>
+  <input id="username" placeholder="Username">
+  <input id="password" placeholder="Password">
+  <button onclick="createUser()">Create User</button>
 </div>
 
-
-<div id="panel" class="box hide">
-<h3 id="aname"></h3>
-
-
-<h4>Create User</h4>
-<input id="u" placeholder="Username">
-<input id="p" placeholder="Password">
-<input id="d" placeholder="Days">
-<button onclick="createUser()">Create</button>
-
-
-<h4>Reset HWID</h4>
-<input id="ru" placeholder="Username">
-<button onclick="resetHWID()">Reset</button>
-
-
-<h4>Delete User</h4>
-<input id="du" placeholder="Username">
-<button class="danger" onclick="deleteUser()">Delete</button>
-
-
-<h4>Live Online</h4>
-<p id="online">0</p>
+<div class="box">
+  <h2>Generate Admin OTP</h2>
+  <button onclick="generateOTP()">Generate OTP</button>
+  <p id="otp"></p>
 </div>
 
+<div class="box">
+  <h2>Online Users</h2>
+  <p id="live">0</p>
+</div>
+
+<div class="box">
+  <h2>User Delete</h2>
+  <input id="delUser" placeholder="Username to delete">
+  <button onclick="deleteUser()">Delete User</button>
+</div>
 
 <script type="module" src="app.js"></script>
 </body>
