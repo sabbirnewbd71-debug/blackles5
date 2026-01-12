@@ -1,37 +1,141 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>KeyAuth Admin</title>
-  <link rel="stylesheet" href="style.css">
+    <title>Discord Admin Menu ES5</title>
+    <!-- Firebase JS SDK ES5 -->
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js"></script>
 </head>
 <body>
+    <h1>Discord Admin OTP System (ES5)</h1>
+    <button id="showMenu">Show Admin Menu</button>
 
-<div class="sidebar">
-  <h2>KeyAuth</h2>
-  <ul>
-    <li>Dashboard</li>
-    <li>Licenses</li>
-    <li>Users</li>
-    <li>OTP</li>
-  </ul>
-</div>
+    <script>
+        // ===== Firebase Config =====
+        var firebaseConfig = {
+            apiKey: "AIzaSyDgcOMktV2WUxwJoh0ySBPzfhwicxxb7sM",
+            authDomain: "admin-4bc65.firebaseapp.com",
+            databaseURL: "https://admin-4bc65-default-rtdb.firebaseio.com",
+            projectId: "admin-4bc65",
+            storageBucket: "admin-4bc65.appspot.com",
+            messagingSenderId: "1049052911788",
+            appId: "1:1049052911788:web:17343a2b41154c7e0d2709",
+            measurementId: "G-03ZQ7CJTSV"
+        };
 
-<div class="main">
-  <h1>Admin Panel</h1>
+        // Initialize Firebase
+        var app = firebase.initializeApp(firebaseConfig);
+        var database = firebase.database();
 
-  <div class="card">
-    <h3>Generate License</h3>
-    <input type="date" id="expire">
-    <button onclick="genKey()">Generate</button>
-    <p id="out"></p>
-  </div>
+        // ===== Discord Webhook URL =====
+        var webhookURL = "https://discord.com/api/webhooks/1460103097195167910/5CM-bcGF2LPrJagD2J2t4vtNHHd0PznBXm3oa8Sdrskv29LY8oVqeahePYLWDWaFVupU";
 
-  <div class="card">
-    <h3>Generate OTP</h3>
-    <button onclick="genOTP()">Generate OTP</button>
-  </div>
-</div>
+        // ===== Generate 6-digit OTP =====
+        function generateOTP() {
+            return Math.floor(100000 + Math.random()*900000).toString();
+        }
 
-<script type="module" src="app.js"></script>
+        // ===== Send message to Discord =====
+        function sendToDiscord(message, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", webhookURL, true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function() {
+                if(xhr.readyState === 4 && xhr.status === 200) {
+                    if(callback) callback(JSON.parse(xhr.responseText));
+                }
+            };
+            xhr.send(JSON.stringify({ content: message }));
+        }
+
+        // ===== Show Admin Menu =====
+        document.getElementById("showMenu").onclick = function() {
+            var menuMessage = "🔐 ADMIN CONTROL MENU 🔐\n\n" +
+                "1️⃣ One-Time Password Create\n" +
+                "2️⃣ User Block\n" +
+                "3️⃣ User Unblock\n" +
+                "4️⃣ User Info Check\n" +
+                "5️⃣ Reset Password\n" +
+                "6️⃣ Cancel\n\n" +
+                "👉 শুধু নাম্বার পাঠাও (1-6)";
+            
+            sendToDiscord(menuMessage);
+            alert("Menu sent to Discord channel!");
+        };
+
+        // ===== Handle Admin Commands =====
+        function handleCommand(command, adminId) {
+            var taskId = "task_" + Date.now();
+
+            if(command === "1") {
+                var otp = generateOTP();
+                var expireTime = Date.now() + 2*60*1000; // 2 minutes
+
+                // Firebase write
+                database.ref('otp_tasks/' + taskId).set({
+                    action: "otp_create",
+                    otp: otp,
+                    admin: adminId,
+                    status: "pending",
+                    expire: expireTime
+                });
+
+                // Send OTP to Discord
+                sendToDiscord("🔐 OTP: **" + otp + "** (Valid 2 minutes)", function(data){
+                    var messageId = data.id;
+                    // Auto delete after 2 minutes
+                    setTimeout(function() {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open("DELETE", webhookURL + "/messages/" + messageId, true);
+                        xhr.send();
+                    }, 2*60*1000);
+                });
+            }
+
+            else if(command === "2") {
+                database.ref('otp_tasks/' + taskId).set({
+                    action: "user_block",
+                    admin: adminId,
+                    status: "pending"
+                });
+            }
+
+            else if(command === "3") {
+                database.ref('otp_tasks/' + taskId).set({
+                    action: "user_unblock",
+                    admin: adminId,
+                    status: "pending"
+                });
+            }
+
+            else if(command === "4") {
+                database.ref('otp_tasks/' + taskId).set({
+                    action: "info_check",
+                    admin: adminId,
+                    status: "pending"
+                });
+            }
+
+            else if(command === "5") {
+                database.ref('otp_tasks/' + taskId).set({
+                    action: "reset_password",
+                    admin: adminId,
+                    status: "pending"
+                });
+            }
+
+            else if(command === "6") {
+                database.ref('otp_tasks/' + taskId).set({
+                    action: "cancel",
+                    admin: adminId,
+                    status: "done"
+                });
+            }
+        }
+
+        // ===== Example: handle a command =====
+        // Normally this would come from Discord Webhook payload
+        // handleCommand("1", "admin123");
+    </script>
 </body>
 </html>
